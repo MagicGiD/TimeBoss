@@ -1,0 +1,15 @@
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+
+# Encryption keys
+*.key
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.env/
