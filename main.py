@@ -27,15 +27,25 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
 from cryptography.fernet import Fernet
 
-# --- КОНФИГ ---
-TOKEN = "8400033486:AAG-wIR3L3XVscEACkmzEUuPm90G-mqmJfI"  # вставь токен
+
+import os
+
+def load_token():
+    try:
+        with open("token.txt", "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        raise SystemExit("❌ Файл token.txt не найден. Создай его рядом с main.py")
+
+TOKEN = load_token()
+
 DATABASE_NAME = "timeboss_global.db"
 KEY_FILE = "secret.key"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# --- ШИФРОВАНИЕ ---
+
 
 def load_or_create_key():
     if os.path.exists(KEY_FILE):
@@ -72,7 +82,7 @@ def dec(text: Optional[str]) -> Optional[str]:
     except Exception:
         return text
 
-# --- АДМИНЫ ---
+
 
 def load_admins():
     if not os.path.exists("admins.txt"):
@@ -82,7 +92,7 @@ def load_admins():
 
 ADMINS = load_admins()
 
-# --- БАЗА ДАННЫХ ---
+
 
 class Database:
     def __init__(self, db_name):
@@ -209,7 +219,7 @@ class Database:
 
 db = Database(DATABASE_NAME)
 
-# --- FSM ---
+
 
 class Form(StatesGroup):
     reg_name = State()
@@ -229,7 +239,7 @@ class Form(StatesGroup):
     submit_work_comment = State()
     leader_revision_comment = State()
 
-# --- ГАЙД ---
+
 
 GUIDE_TEXT = (
     "📘 <b>Полный гайд по TimeBOSS</b>\n\n"
@@ -253,7 +263,7 @@ GUIDE_TEXT = (
     "Если что-то непонятно -> открой <i>Настройки</i> -> <i>Гайд по боту</i>"
 )
 
-# --- ВСПОМОГАТЕЛЬНОЕ ---
+
 
 def main_menu_keyboard(role="member"):
     if role == "leader":
@@ -297,7 +307,7 @@ def map_task_status(status: str) -> str:
         return "завершено"
     return status
 
-# --- БОТ ---
+
 
 session = AiohttpSession(timeout=30)
 bot = Bot(
@@ -307,7 +317,7 @@ bot = Bot(
 )
 dp = Dispatcher(storage=MemoryStorage())
 
-# --- ГЛОБАЛЬНЫЙ РОУТЕР ---
+
 
 async def global_router(message: Message, state: FSMContext):
     if message.text == "📋 Мои задачи":
@@ -327,7 +337,7 @@ async def global_router(message: Message, state: FSMContext):
     elif message.text == "📂 Работы команд":
         await leader_submissions_menu(message, state)
 
-# --- START ---
+
 
 @dp.message(Command("start"))
 async def start_handler(message: Message, state: FSMContext):
@@ -349,7 +359,7 @@ async def start_handler(message: Message, state: FSMContext):
             reply_markup=main_menu_keyboard(user[3])
         )
 
-# --- РЕГИСТРАЦИЯ ---
+
 
 @dp.message(Form.reg_name)
 async def process_reg_name(message: Message, state: FSMContext):
@@ -422,7 +432,7 @@ async def set_role(cb: CallbackQuery):
         reply_markup=main_menu_keyboard(role)
     )
 
-# --- КОМАНДЫ ---
+
 
 @dp.message(F.text == "👥 Команды")
 async def teams_menu(message: Message, state: FSMContext):
@@ -678,7 +688,6 @@ async def leave_team_confirm(cb: CallbackQuery):
     db.execute("DELETE FROM team_members WHERE team_id = ? AND user_id = ?", (team_id, cb.from_user.id))
     await cb.message.answer("🚪 Ты успешно вышел из команды")
 
-# --- ЗАДАЧИ ---
 
 @dp.message(F.text == "📋 Мои задачи")
 async def my_tasks(message: Message, state: FSMContext):
@@ -1053,7 +1062,6 @@ async def submit_work_comment_process(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("✅ Работа отправлена на проверку. Статус задачи теперь: <b>рассматривается</b>")
 
-# --- ПРОВЕРКА РАБОТ ЛИДЕРОМ ---
 
 @dp.callback_query(F.data.startswith("approve_sub:"))
 async def approve_submission(cb: CallbackQuery):
@@ -1181,7 +1189,7 @@ async def revise_submission_process(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("Комментарий отправлен исполнителю. Статус задачи: <b>на доработке</b>")
 
-# --- ПРОСМОТР ГОТОВЫХ РАБОТ ---
+
 
 @dp.message(F.text == "📂 Работы команд")
 async def leader_submissions_menu(message: Message, state: FSMContext):
@@ -1308,7 +1316,7 @@ async def view_submission(cb: CallbackQuery):
         except Exception as e:
             logger.warning(f"Не удалось отправить файл по работе {submission_id}: {e}")
 
-# --- ПРОФИЛЬ ---
+
 
 @dp.message(F.text == "👤 Мой профиль")
 async def profile_handler(message: Message, state: FSMContext):
@@ -1419,7 +1427,7 @@ async def change_role(message: Message, state: FSMContext):
     kb = InlineKeyboardMarkup(inline_keyboard=kb_rows)
     await message.answer("Выбери новую роль. Это изменит доступные функции меню", reply_markup=kb)
 
-# --- НАСТРОЙКИ ---
+
 
 @dp.message(F.text == "⚙ Настройки")
 async def settings_handler(message: Message, state: FSMContext):
@@ -1442,7 +1450,6 @@ async def support_handler(cb: CallbackQuery):
         "Напиши создателю бота: @mgidd"
     )
 
-# --- АДМИН ПАНЕЛЬ ---
 
 @dp.callback_query(F.data == "admin_panel")
 async def admin_panel_handler(cb: CallbackQuery):
@@ -1513,7 +1520,7 @@ async def admin_test_deadlines(cb: CallbackQuery):
         "Просто создай задачи с разными дедлайнами и подожди."
     )
 
-# --- УВЕДОМЛЕНИЯ О ДЕДЛАЙНАХ ---
+
 
 async def send_deadline_notice(user_id, title, deadline, when):
     text = (
@@ -1591,7 +1598,7 @@ async def deadline_notifier():
 
         await asyncio.sleep(60)
 
-# --- ЗАПУСК ---
+
 
 async def main():
     asyncio.create_task(deadline_notifier())
@@ -1599,3 +1606,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
