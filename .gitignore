@@ -9,6 +9,9 @@
 # Admin list
 admins.txt
 
+# Bot token
+token.txt
+
 # Python cache
 __pycache__/
 *.pyc
@@ -16,4 +19,5 @@ __pycache__/
 # Virtual environments
 venv/
 .env/
+
 
