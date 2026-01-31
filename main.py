@@ -1,12 +1,3 @@
-import asyncio
-import logging
-import sqlite3
-import random
-import string
-import re
-import os
-import uuid
-import threading
 from datetime import datetime
 from typing import Optional
 
@@ -28,16 +19,24 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from cryptography.fernet import Fernet
 
 
-import os
-
 def load_token():
+    path = os.path.join(BASE_DIR, "token.txt")
     try:
-        with open("token.txt", "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8") as f:
             return f.read().strip()
     except FileNotFoundError:
-        raise SystemExit("❌ Файл token.txt не найден. Создай его рядом с main.py")
+        raise SystemExit("❌ Файл token.txt не найден рядом с main.py")
+
+def load_admins():
+    path = os.path.join(BASE_DIR, "admins.txt")
+    if not os.path.exists(path):
+        return []
+    with open(path, "r", encoding="utf-8") as f:
+        return [int(x.strip()) for x in f if x.strip().isdigit()]
 
 TOKEN = load_token()
+ADMINS = load_admins()
+
 
 DATABASE_NAME = "timeboss_global.db"
 KEY_FILE = "secret.key"
@@ -81,17 +80,6 @@ def dec(text: Optional[str]) -> Optional[str]:
         return value
     except Exception:
         return text
-
-
-
-def load_admins():
-    if not os.path.exists("admins.txt"):
-        return []
-    with open("admins.txt", "r", encoding="utf-8") as f:
-        return [int(x.strip()) for x in f.readlines() if x.strip().isdigit()]
-
-ADMINS = load_admins()
-
 
 
 class Database:
@@ -1606,4 +1594,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
