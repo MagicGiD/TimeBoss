@@ -6,6 +6,9 @@
 # Encryption keys
 *.key
 
+# Admin list
+admins.txt
+
 # Python cache
 __pycache__/
 *.pyc
@@ -13,3 +16,4 @@ __pycache__/
 # Virtual environments
 venv/
 .env/
+
