@@ -8,6 +8,9 @@ import os
 import uuid
 import threading
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
 from datetime import datetime
 from typing import Optional
 
@@ -1592,6 +1595,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
