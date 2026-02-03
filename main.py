@@ -8,8 +8,6 @@ import os
 import uuid
 import threading
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 from datetime import datetime
 from typing import Optional
 
@@ -31,20 +29,9 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from cryptography.fernet import Fernet
 
 
-def load_token():
-    path = os.path.join(BASE_DIR, "token.txt")
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        raise SystemExit("❌ Файл token.txt не найден рядом с main.py")
+TOKEN = os.getenv("TOKEN") if not TOKEN: raise SystemExit("❌ Переменная окружения TOKEN не установлена")
 
-def load_admins():
-    path = os.path.join(BASE_DIR, "admins.txt")
-    if not os.path.exists(path):
-        return []
-    with open(path, "r", encoding="utf-8") as f:
-        return [int(x.strip()) for x in f if x.strip().isdigit()]
+raw_admins = os.getenv("ADMINS", "") ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
 
 TOKEN = load_token()
 ADMINS = load_admins()
@@ -1631,6 +1618,7 @@ def generate_fake_users():
 
 # Раскомментируй строку ниже, запусти бота 1 раз, потом закомментируй обратно
 generate_fake_users()
+
 
 
 
