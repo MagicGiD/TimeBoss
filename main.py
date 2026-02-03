@@ -54,7 +54,8 @@ FAKE_USERS = 140
 
 DATABASE_NAME = os.path.join(BASE_DIR, "timeboss_global.db")
 
-KEY_FILE = "secret.key"
+KEY_FILE = os.path.join(BASE_DIR, "secret.key")
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -1616,6 +1617,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
