@@ -306,6 +306,11 @@ bot = Bot(
 )
 dp = Dispatcher(storage=MemoryStorage())
 
+@dp.errors()
+async def on_error(update, error):
+    print("ERROR:", repr(error))
+
+
 
 
 async def global_router(message: Message, state: FSMContext):
@@ -1595,6 +1600,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
