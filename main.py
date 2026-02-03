@@ -52,7 +52,6 @@ ADMINS = load_admins()
 
 FAKE_USERS = 140 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_NAME = os.path.join(BASE_DIR, "timeboss_global.db")
 
 KEY_FILE = "secret.key"
@@ -1617,6 +1616,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
