@@ -1477,7 +1477,7 @@ async def admin_stats_handler(cb: CallbackQuery):
         return await cb.answer("Доступ запрещён", show_alert=True)
 
     real_users = db.fetch_one("SELECT COUNT(*) FROM users")[0]
-    user_count = real_users + FAKE_USERS
+    users_count = real_users + FAKE_USERS
 
     teams_count = db.fetch_one("SELECT COUNT(*) FROM teams", ())[0]
     tasks_count = db.fetch_one("SELECT COUNT(*) FROM tasks", ())[0]
@@ -1617,6 +1617,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
