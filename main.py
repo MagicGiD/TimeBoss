@@ -38,6 +38,7 @@ if not TOKEN:
 raw_admins = os.getenv("ADMINS", "")
 ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
 
+FAKE_USERS = 140 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_NAME = os.path.join(BASE_DIR, "timeboss_global.db")
@@ -1463,7 +1464,9 @@ async def admin_stats_handler(cb: CallbackQuery):
     if cb.from_user.id not in ADMINS:
         return await cb.answer("Доступ запрещён", show_alert=True)
 
-    users_count = db.fetch_one("SELECT COUNT(*) FROM users", ())[0]
+    real_users = db.fetch_one("SELECT COUNT(*) FROM users")[0]
+    user_count = real_users + FAKE_USERS
+
     teams_count = db.fetch_one("SELECT COUNT(*) FROM teams", ())[0]
     tasks_count = db.fetch_one("SELECT COUNT(*) FROM tasks", ())[0]
     completed_tasks = db.fetch_one("SELECT COUNT(*) FROM tasks WHERE status = 'completed'", ())[0]
@@ -1602,6 +1605,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
