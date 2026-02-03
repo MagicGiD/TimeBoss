@@ -1630,7 +1630,8 @@ def generate_fake_users():
             print(f"[ERR] Не удалось добавить фантома #{i+1}: {e}")
 
 # Раскомментируй строку ниже, запусти бота 1 раз, потом закомментируй обратно
-# generate_fake_users()
+generate_fake_users()
+
 
 
 
