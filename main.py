@@ -1603,11 +1603,7 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-def delete_phantoms():
-    db.execute("DELETE FROM users WHERE role = 'phantom'")
-    print("Фантомы удалены")
 
- delete_phantoms()  # ← раскомментируй, запусти один раз, потом закомментируй обратно
 
 
 
