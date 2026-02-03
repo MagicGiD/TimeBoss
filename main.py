@@ -39,7 +39,9 @@ raw_admins = os.getenv("ADMINS", "")
 ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
 
 
-DATABASE_NAME = "timeboss_global.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_NAME = os.path.join(BASE_DIR, "timeboss_global.db")
+
 KEY_FILE = "secret.key"
 
 logging.basicConfig(level=logging.INFO)
@@ -1600,6 +1602,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
