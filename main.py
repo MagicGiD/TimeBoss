@@ -36,10 +36,6 @@ raw_admins = os.getenv("ADMINS", "")
 ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
 
 
-TOKEN = load_token()
-ADMINS = load_admins()
-
-
 DATABASE_NAME = "timeboss_global.db"
 KEY_FILE = "secret.key"
 
@@ -1621,6 +1617,7 @@ def generate_fake_users():
 
 # Раскомментируй строку ниже, запусти бота 1 раз, потом закомментируй обратно
 generate_fake_users()
+
 
 
 
