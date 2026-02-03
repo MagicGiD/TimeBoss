@@ -29,7 +29,7 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from cryptography.fernet import Fernet
 
 
-TOKEN = os.getenv("API_TOKEN") if not TOKEN: raise SystemExit("❌ Переменная окружения TOKEN не установлена")
+bot = os.getenv("BOT_TOKEN") if not TOKEN: raise SystemExit("❌ Переменная окружения TOKEN не установлена")
 
 raw_admins = os.getenv("ADMINS", "") ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
 
@@ -1618,6 +1618,7 @@ def generate_fake_users():
 
 # Раскомментируй строку ниже, запусти бота 1 раз, потом закомментируй обратно
 generate_fake_users()
+
 
 
 
