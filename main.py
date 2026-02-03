@@ -1593,31 +1593,6 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-# ---------------------------------------------------------
-# ВРЕМЕННАЯ ГЕНЕРАЦИЯ 100 ФАНТОМНЫХ ПОЛЬЗОВАТЕЛЕЙ
-# ---------------------------------------------------------
-def generate_fake_users():
-    import random
-    import datetime
-
-    for i in range(100):
-        user_id = random.randint(10_000_000, 99_999_999)
-        full_name = f"Фантом Пользователь {i+1}"
-        birth_date = "01.01.2000"
-        profession = "фантом"
-
-        try:
-            db.execute(
-                "INSERT INTO users (user_id, full_name, birth_date, profession) VALUES (?, ?, ?, ?)",
-                (user_id, enc(full_name), enc(birth_date), enc(profession))
-            )
-            print(f"[OK] Добавлен фантом #{i+1} — ID {user_id}")
-        except Exception as e:
-            print(f"[ERR] Не удалось добавить фантома #{i+1}: {e}")
-
-# Раскомментируй строку ниже, запусти бота 1 раз, потом закомментируй обратно
-generate_fake_users()
-
 
 
 
