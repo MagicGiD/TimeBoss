@@ -35,8 +35,20 @@ TOKEN = os.getenv("TOKEN")
 if not TOKEN:
     raise SystemExit("❌ Переменная окружения TOKEN не установлена")
 
-raw_admins = os.getenv("ADMINS", "")
-ADMINS = [int(x) for x in raw_admins.split(",") if x.strip().isdigit()]
+def load_admins():
+    admins = []
+    try:
+        with open("admins.txt", "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.isdigit():
+                    admins.append(int(line))
+    except FileNotFoundError:
+        print("⚠️ Файл admins.txt не найден. Админов нет.")
+    return admins
+
+ADMINS = load_admins()
+
 
 FAKE_USERS = 140 
 
@@ -1605,6 +1617,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
